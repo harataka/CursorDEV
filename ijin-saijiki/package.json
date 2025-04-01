@@ -1,0 +1,14 @@
+{
+    "name": "ijin-saijiki",
+    "version": "1.0.0",
+    "description": "偉人歳時記アプリケーション",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "init-db": "node src/database/init-db.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "sqlite3": "^5.1.6"
+    }
+}
