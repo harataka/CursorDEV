@@ -1,40 +1,32 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
-const dbPath = path.join(__dirname, '../../database/famous_people.db');
 
+// 環境変数からDBパスを取得するか、デフォルトパスを使用
+const dbPath = process.env.DB_PATH
+    ? process.env.DB_PATH
+    : path.join(__dirname, '../../database/famous_people.db');
 
 // データベース接続
 const db = new sqlite3.Database(dbPath, (err) => {
-
     if (err) {
         console.error('データベース接続エラー', err.message);
     } else {
-        console.log('データベースに接続しました');
+        console.log('データベースに接続しました: ' + dbPath);
     }
-
 });
-
 
 // すべての偉人データを取得
 function getAllFamousPeople(callback) {
-
     const sql = 'SELECT * FROM famous_people';
-
     db.all(sql, [], (err, rows) => {
         callback(err, rows);
     });
-
 }
-
-
 
 // 特定の年度の個人データを取得
 function getFamousPeopleByAge(age, callback) {
-
     const exactMatchSql = 'SELECT * FROM famous_people WHERE age = ?';
-
     db.all(exactMatchSql, [age], (err, exactMatches) => {
-
         if (err) {
             return callback(err);
         }
@@ -63,18 +55,14 @@ function getFamousPeopleByAge(age, callback) {
                 return callback(null, closeMatches);
             }
 
-
             // どちらも無ければ、ランダムに３つ選ぶ
             const randomSql = 'SELECT * FROM famous_people ORDER BY RANDOM() LIMIT 3';
-
             db.all(randomSql, [], (err, randomMatches) => {
                 callback(err, randomMatches);
             });
-
         });
     });
 }
-
 
 module.exports = {
     getAllFamousPeople,
