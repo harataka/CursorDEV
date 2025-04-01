@@ -2,15 +2,17 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
 
+
 // データベースディレクトリの作成確認
 const dbDir = path.join(__dirname, '../../database');
+
 if (!fs.existsSync(dbDir)) {
     fs.mkdirSync(dbDir, { recursive: true });
 }
 
 const dbPath = path.join(dbDir, 'famous_people.db');
 
-// 既存のDBがあれば削除（初期化のため）
+// 既存のDBがあれば削除（初期化）
 if (fs.existsSync(dbPath)) {
     fs.unlinkSync(dbPath);
 }
@@ -18,27 +20,27 @@ if (fs.existsSync(dbPath)) {
 // 新しいDB接続を作成
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
-        console.error('データベース作成エラー:', err.message);
+        console.error('データベース作成エラー', err.message);
         return;
     }
     console.log('新しいデータベースを作成しました');
 
-    // テーブル作成
+    // テーブルの作成
     db.run(`
-    CREATE TABLE famous_people (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      age INTEGER NOT NULL,
-      episode TEXT NOT NULL
+    CREATE TABLE famous_people(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        age INTEGER NOT NULL,
+        episode TEXT NOT NULL
     )
-  `, (err) => {
+    `, (err) => {
         if (err) {
-            console.error('テーブル作成エラー:', err.message);
+            console.error('テーブル作成エラー', err.message);
             return;
         }
         console.log('famous_peopleテーブルを作成しました');
 
-        // 初期データの挿入
+        // 初期データ挿入
         const initialData = [
             { age: 7, name: "モーツァルト", episode: "7歳でヨーロッパ演奏旅行を行い、各国の王侯貴族を驚かせた" },
             { age: 8, name: "ピカソ", episode: "8歳で最初の油絵「ピカドール」を完成させた" },
@@ -67,11 +69,11 @@ const db = new sqlite3.Database(dbPath, (err) => {
             { age: 90, name: "黒澤明", episode: "90歳の時、「まだまだ映画を作りたい」と語り、創作意欲を持ち続けた" }
         ];
 
-        // プリペアドステートメントを使用してデータを挿入
+        // データ挿入
         const insertStmt = db.prepare(`
-      INSERT INTO famous_people (age, name, episode)
-      VALUES (?, ?, ?)
-    `);
+        INSERT INTO famous_people(age, name, episode)    
+        VALUES(?, ?, ?)
+        `);
 
         initialData.forEach(person => {
             insertStmt.run(person.age, person.name, person.episode);
@@ -81,13 +83,13 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
         console.log('初期データを挿入しました');
 
-        // DBを閉じる
+        // データベース接続を閉じる
         db.close((err) => {
             if (err) {
-                console.error('データベースを閉じる際にエラーが発生しました:', err.message);
+                console.error('データベース接続閉じるエラー', err.message);
             } else {
-                console.log('データベース初期化が完了しました');
+                console.log('データベース接続を閉じました');
             }
         });
     });
-}); 
+});

@@ -1,0 +1,24 @@
+# NPM
+node_modules/
+npm-debug.log
+package-lock.json
+
+# データベース
+database/*.db
+
+# 環境設定
+.env
+
+# エディタ関連
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OSファイル
+.DS_Store
+Thumbs.db
+
+# ログファイル
+logs/
+*.log 

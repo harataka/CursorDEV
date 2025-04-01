@@ -33,10 +33,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // 結果表示エリアに読み込み中のメッセージを表示
-        resultsDiv.innerHTML = '<p class="loading">データを取得中...</p>';
+        resultsDiv.innerHTML = '<p class="loading">データ取得中</p>';
 
         try {
-            // APIから年齢に対応するエピソードを検索
+            // APIからデータを取得
             const matchingEpisodes = await searchFamousPeopleByAge(age);
 
             // 結果表示エリアをクリア
