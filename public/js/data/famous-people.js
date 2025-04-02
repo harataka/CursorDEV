@@ -1,5 +1,7 @@
 // 偉人のエピソードデータをsupabaseから取得するためのモジュール
 // この情報はフロントエンドに持たせてもセキュリティリスクはない
+import { corsHeaders } from './cors.js';
+
 const SUPABASE_URL = 'https://zmqficvjyitksibpthxd.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InptcWZpY3ZqeWl0a3NpYnB0aHhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1NDk1MjUsImV4cCI6MjA1OTEyNTUyNX0.f4JteG81Rfyq6jIrsCQviPmZUD_nKk4e6V_2mw_fcM8';
 
@@ -15,16 +17,23 @@ async function fetchFamousPeopleData() {
         logDebug('API Key (最初の10文字):', SUPABASE_KEY.substring(0, 10) + '...');
 
         const response = await fetch(`${SUPABASE_URL}/rest/v1/famous_people?select=*`, {
+            method: 'GET',
             headers: {
                 'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`
-            }
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                ...corsHeaders
+            },
+            mode: 'cors'
         });
 
         logDebug('レスポンスステータス:', response.status);
+        logDebug('レスポンスヘッダー:', Object.fromEntries(response.headers.entries()));
 
         if (!response.ok) {
-            throw new Error('サーバからのデータ取得に失敗しました');
+            const errorText = await response.text();
+            logDebug('エラーレスポンス:', errorText);
+            throw new Error(`サーバーからのデータ取得に失敗しました: ${response.status} - ${errorText}`);
         }
 
         const data = await response.json();
@@ -46,10 +55,12 @@ async function searchFamousPeopleByAge(age) {
         logDebug('完全一致検索URL:', exactMatchUrl);
 
         const response = await fetch(exactMatchUrl, {
+            method: 'GET',
             headers: {
                 'apikey': SUPABASE_KEY,
                 'Authorization': `Bearer ${SUPABASE_KEY}`,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                ...corsHeaders
             },
             mode: 'cors'
         });
