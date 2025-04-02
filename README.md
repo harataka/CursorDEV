@@ -140,6 +140,51 @@ TO public
 USING (true);
 ```
 
+### 4. CORS設定
+
+フロントエンド（GitHub Pages）からSupabaseに直接アクセスする場合、CORS（Cross-Origin Resource Sharing）の設定が必要です。クライアントサイドで以下のように実装します。
+
+#### フロントエンドでの実装
+
+CORSヘッダーを定義するファイルを作成します：
+
+```javascript
+// public/js/data/cors.js
+export const corsHeaders = {
+    'Access-Control-Allow-Origin': 'https://harataka.github.io',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Max-Age': '86400'
+};
+```
+
+APIリクエスト時にCORSヘッダーを適用します：
+
+```javascript
+// fetchの例
+const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        ...corsHeaders
+    },
+    mode: 'cors'
+});
+```
+
+#### CORS設定のデバッグ方法
+
+CORS関連の問題をデバッグする際は、以下のポイントを確認してください：
+
+1. ブラウザのコンソールでエラーメッセージを確認
+2. ネットワークタブでリクエストの詳細（特にヘッダー）を確認
+3. OPTIONSメソッドのプリフライトリクエストが正しく処理されているか確認
+4. レスポンスヘッダーに適切なCORS関連ヘッダーが含まれているか確認
+
+注意: ステータスコードが200 OKでも、CORSの設定が不適切な場合はデータが取得できません。Supabaseは通常、適切なCORSヘッダーを自動的に返しますが、フロントエンド側でも上記の実装が必要です。
+
 ## 技術スタック
 
 - フロントエンド: HTML, CSS, JavaScript (ES modules)
