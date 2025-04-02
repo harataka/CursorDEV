@@ -1,5 +1,5 @@
 // 偉人のエピソードデータをsupabaseから取得するためのモジュール
-
+// この情報はフロントエンドに持たせてもセキュリティリスクはない
 const SUPABASE_URL = 'https://zmqficvjyitksibpthxd.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InptcWZpY3ZqeWl0a3NpYnB0aHhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1NDk1MjUsImV4cCI6MjA1OTEyNTUyNX0.f4JteG81Rfyq6jIrsCQviPmZUD_nKk4e6V_2mw_fcM8';
 
