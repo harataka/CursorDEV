@@ -48,14 +48,19 @@ async function searchFamousPeopleByAge(age) {
         const response = await fetch(exactMatchUrl, {
             headers: {
                 'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`
-            }
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            mode: 'cors'
         });
 
         logDebug('完全一致検索レスポンスステータス:', response.status);
+        logDebug('レスポンスヘッダー:', Object.fromEntries(response.headers.entries()));
 
         if (!response.ok) {
-            throw new Error(`サーバーからのデータ取得に失敗しました: ${response.status}`);
+            const errorText = await response.text();
+            logDebug('エラーレスポンス:', errorText);
+            throw new Error(`サーバーからのデータ取得に失敗しました: ${response.status} - ${errorText}`);
         }
 
         const exactMatchResult = await response.json();

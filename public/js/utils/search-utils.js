@@ -10,7 +10,7 @@ function findEpisodesByAge(famousPeopleEpisodes, targetAge) {
     }
 
     // 完全一致がない場合は、近いものを探す
-    const ageDifference = (episode) => Math.abs(episode.age - targetAge)
+    const ageDifference = (episode) => Math.abs(episode.age - targetAge);
 
     // 年齢の差が５以内のエピソードを探す
     const closeMatches = famousPeopleEpisodes.filter(item => ageDifference(item) <= 5);
