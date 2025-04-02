@@ -76,6 +76,7 @@ async function searchFamousPeopleByAge(age) {
 
         const exactMatchResult = await response.json();
         logDebug('完全一致検索結果数:', exactMatchResult.length);
+        logDebug('完全一致検索結果:', exactMatchResult);
 
         // 完全一致のデータがあればそれを返す
         if (exactMatchResult.length > 0) {
@@ -89,20 +90,28 @@ async function searchFamousPeopleByAge(age) {
         logDebug('範囲検索URL:', rangeUrl);
 
         const rangeResponse = await fetch(rangeUrl, {
+            method: 'GET',
             headers: {
                 'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`
-            }
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                ...corsHeaders
+            },
+            mode: 'cors'
         });
 
         logDebug('範囲検索レスポンスステータス:', rangeResponse.status);
+        logDebug('範囲検索レスポンスヘッダー:', Object.fromEntries(rangeResponse.headers.entries()));
 
         if (!rangeResponse.ok) {
-            throw new Error(`サーバーからのデータ取得に失敗しました: ${rangeResponse.status}`);
+            const errorText = await rangeResponse.text();
+            logDebug('範囲検索エラーレスポンス:', errorText);
+            throw new Error(`サーバーからのデータ取得に失敗しました: ${rangeResponse.status} - ${errorText}`);
         }
 
         const rangeResults = await rangeResponse.json();
         logDebug('範囲検索結果数:', rangeResults.length);
+        logDebug('範囲検索結果:', rangeResults);
 
         if (rangeResults.length > 0) {
             return rangeResults.slice(0, 3); // 最大3つまで
@@ -113,16 +122,23 @@ async function searchFamousPeopleByAge(age) {
         logDebug('ランダム検索URL:', randomUrl);
 
         const randomResponse = await fetch(randomUrl, {
+            method: 'GET',
             headers: {
                 'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`
-            }
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                ...corsHeaders
+            },
+            mode: 'cors'
         });
 
         logDebug('ランダム検索レスポンスステータス:', randomResponse.status);
+        logDebug('ランダム検索レスポンスヘッダー:', Object.fromEntries(randomResponse.headers.entries()));
 
         if (!randomResponse.ok) {
-            throw new Error(`サーバーからのデータ取得に失敗しました: ${randomResponse.status}`);
+            const errorText = await randomResponse.text();
+            logDebug('ランダム検索エラーレスポンス:', errorText);
+            throw new Error(`サーバーからのデータ取得に失敗しました: ${randomResponse.status} - ${errorText}`);
         }
 
         const randomResults = await randomResponse.json();
