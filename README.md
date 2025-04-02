@@ -26,7 +26,27 @@ cd ijin-saijiki
 npm install
 ```
 
-### 3. データベースの初期化
+### 3. データベース設定
+
+#### Supabaseを使用する場合（推奨）
+
+1. [Supabase](https://supabase.com/)にアカウントを作成し、新しいプロジェクトを作成
+2. 「Table Editor」からテーブルを作成:
+   ```sql
+   CREATE TABLE famous_people (
+     id SERIAL PRIMARY KEY,
+     name TEXT NOT NULL,
+     age INT NOT NULL,
+     episode TEXT NOT NULL
+   );
+   ```
+3. 初期データを挿入するためのSQLを実行（詳細はSupabaseセクションを参照）
+4. `.env`ファイルを作成し、接続情報を設定：
+   ```
+   DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.abcdefghijklm.supabase.co:5432/postgres
+   ```
+
+#### ローカルSQLiteを使用する場合（オプション）
 
 ```bash
 # データベースの初期化（偉人データの登録）
@@ -42,55 +62,89 @@ npm start
 
 アプリケーションは http://localhost:3000 でアクセスできます。
 
-## Renderにデプロイする方法
+## Renderにデプロイする方法（Supabase使用）
 
-### 1. Renderアカウントの作成
+### 1. Supabaseの設定
 
-[Render](https://render.com/)にアクセスし、アカウントを作成してください。
+1. Supabaseでプロジェクトを作成し、テーブル設定を行います
+2. データベース接続情報を取得します（Project Settings → Database → Connection string → URI）
 
-### 2. Web Serviceの作成
+### 2. Renderでデプロイ
 
-1. ダッシュボードから「New +」をクリックし、「Web Service」を選択します
-2. GitHubリポジトリに接続するか、公開リポジトリのURLを入力します
+1. Renderダッシュボードから「New +」→「Web Service」を選択
+2. GitHubリポジトリに接続
 3. 以下の設定を行います：
    - Name: 任意の名前（例: ijin-saijiki）
    - Environment: Node
    - Build Command: `npm install`
-   - Start Command: `npm run setup`（初回のみ）または `npm start`（2回目以降）
+   - Start Command: `npm start`
+4. 「Environment」タブで以下の環境変数を追加：
+   - `DATABASE_URL`: Supabaseの接続URL（例: postgresql://postgres:[YOUR-PASSWORD]@db.xxx.supabase.co:5432/postgres）
+5. 「Create Web Service」をクリックしてデプロイ
 
-### 3. ディスク永続化の設定
+## Supabaseデータベース設定
 
-1. Renderダッシュボードの「Disks」タブをクリックします
-2. 「Create Disk」をクリックし、以下の設定を行います：
-   - Name: ijin-data（任意）
-   - Size: 1GB（最小、または必要に応じて設定）
-   - Mount Path: /var/data
-3. ディスクを作成したら、「Environment」タブに移動し、以下の環境変数を追加します：
-   - `DB_PATH`: `/var/data/famous_people.db`
+### 1. テーブル作成
 
-#### 環境変数の詳細設定手順
+Supabaseダッシュボードの「Table Editor」から新しいテーブルを作成します：
 
-1. Renderのダッシュボードにログインします
-2. 該当するWebサービス（偉人歳時記アプリケーション）をクリックして詳細画面に移動します
-3. 左側のサイドメニューから「Environment」をクリックします
-4. 画面中央に表示される「Environment Variables」セクションで直接変数を追加します：
-   - 「Key」欄に `DB_PATH` と入力
-   - 「Value」欄に `/var/data/famous_people.db` と入力
-5. 「Add Environment Variable」または「Save Changes」ボタンをクリックして保存します
-6. 注意：「Create environment group」は複数のサービスで共有する環境変数グループを作成する機能なので、単一サービスの設定では必要ありません
+- テーブル名: `famous_people`
+- カラム:
+  - `id`: `int8`, Primary Key, Identity
+  - `name`: `text`, NOT NULL
+  - `age`: `int4`, NOT NULL
+  - `episode`: `text`, NOT NULL
 
-### 4. 初回デプロイ
+### 2. 初期データの挿入
 
-1. 最初のデプロイでは、「Start Command」に `npm run setup` を設定し、「Save Changes」をクリックします
-2. デプロイが完了し、データベースが初期化されたら、「Start Command」を `npm start` に変更します
+SQLエディタから以下のSQLコードを実行してデータを挿入します：
 
-これにより、Renderの再起動時にもデータベースは初期化されず、永続的にデータが保存されます。
+```sql
+INSERT INTO famous_people(age, name, episode) VALUES
+(7, 'モーツァルト', '7歳でヨーロッパ演奏旅行を行い、各国の王侯貴族を驚かせた'),
+(8, 'ピカソ', '8歳で最初の油絵「ピカドール」を完成させた'),
+(10, 'アインシュタイン', '10歳のとき数学と科学の独学を始めた'),
+(12, '坂本龍馬', '12歳で武市半平太の剣術道場に入門した'),
+(15, 'エジソン', '15歳で新聞を発行し、列車内で販売する事業を始めた'),
+(16, '野口英世', '16歳の時、医学への道を志し、英語や数学の勉強を始めた'),
+(17, 'キュリー夫人', '17歳で家庭教師として働きながら姉の大学進学資金を援助した'),
+(19, 'ナポレオン', '19歳で少尉に昇進し、フランス革命軍の士官となった'),
+(21, 'スティーブ・ジョブズ', '21歳でアップルコンピュータを創業した'),
+(23, 'ビル・ゲイツ', '23歳でマイクロソフト社をワシントン州に法人登記した'),
+(26, '福沢諭吉', '26歳で蘭学塾を開いた'),
+(30, '徳川家康', '30歳で三河一国を与えられ、国主となった'),
+(33, 'イエス・キリスト', '33歳で十字架に架けられたとされる'),
+(35, '夏目漱石', '35歳で処女作「吾輩は猫である」を発表した'),
+(37, 'ゴッホ', '37歳で名画「ひまわり」を描いた'),
+(40, '織田信長', '40歳で明智光秀に謀反され、本能寺で自害した'),
+(43, 'コロンブス', '43歳でアメリカ大陸を「発見」した'),
+(45, '葛飾北斎', '45歳で浮世絵師として独立し「北斎」と名乗った'),
+(50, '伊能忠敬', '50歳で天文学と測量術を学び始めた'),
+(56, '孫正義', '56歳でARM社を32億ポンド（約4.3兆円）で買収した'),
+(62, 'ガンジー', '62歳でインド独立運動の象徴「塩の行進」を行った'),
+(70, 'グランマ・モーゼス', '70歳を超えてから本格的に絵を描き始め、画家として成功した'),
+(75, 'ミケランジェロ', '75歳で世界最大のドーム「サン・ピエトロ大聖堂」の設計を引き受けた'),
+(80, '松下幸之助', '80歳で「人間什么」を提唱し、人間の本質について探求し続けた'),
+(90, '黒澤明', '90歳の時、「まだまだ映画を作りたい」と語り、創作意欲を持ち続けた');
+```
+
+### 3. セキュリティ設定
+
+Row Level Securityを有効にしている場合は、適切なポリシーを設定します。
+今回のアプリケーションはパブリックな読み取りアクセスが必要なため、以下のポリシーを設定してください：
+
+```sql
+CREATE POLICY "Enable read access for all users" ON "public"."famous_people"
+AS PERMISSIVE FOR SELECT
+TO public
+USING (true);
+```
 
 ## 技術スタック
 
 - フロントエンド: HTML, CSS, JavaScript (ES modules)
 - バックエンド: Node.js, Express
-- データベース: SQLite3
+- データベース: PostgreSQL (Supabase)
 
 ## プロジェクト構成
 
@@ -105,10 +159,7 @@ ijin-saijiki/
 │       └── utils/         # ユーティリティ
 ├── src/                   # サーバーサイドソース
 │   └── database/          # データベース関連
-│       ├── db.js          # DB操作
-│       └── init-db.js     # DB初期化
-├── database/              # SQLiteデータベースファイル
-│   └── famous_people.db   # 偉人データのデータベース
+│       └── db.js          # DB操作
 ├── server.js              # サーバーメイン
 ├── package.json           # プロジェクト設定
 └── README.md              # 説明書
@@ -126,12 +177,11 @@ ijin-saijiki/
     "main": "server.js",
     "scripts": {
         "start": "node server.js",
-        "init-db": "node src/database/init-db.js",
-        "setup": "node src/database/init-db.js && node server.js"
+        "dev": "node server.js"
     },
     "dependencies": {
         "express": "^4.21.2",
-        "sqlite3": "^5.1.7"
+        "pg": "^8.11.3"
     }
 }
 ```
@@ -141,30 +191,18 @@ ijin-saijiki/
 #### `main`
 - **説明**: アプリケーションのエントリーポイント（メインファイル）を指定します
 - **実行タイミング**: 他のプロジェクトからこのパッケージを`require()`した時に読み込まれるファイルです
-- **このプロジェクトでは**: `server.js`がメインファイルとして設定されています。ただし、通常のWebアプリケーションでは直接`require()`されることはなく、`npm start`でサーバーを起動します
+- **このプロジェクトでは**: `server.js`がメインファイルとして設定されています
 
 #### `scripts`
 - **説明**: npmコマンドで実行できるスクリプトを定義します
 - **実行タイミング**: ユーザーが明示的に`npm run [スクリプト名]`を実行したときのみ動作します
 - **このプロジェクトで定義されているスクリプト**:
-  - **`start`**: `npm start`で実行されるスクリプトです。このプロジェクトでは、Webサーバー(`server.js`)のみを起動します。
-  - **`init-db`**: `npm run init-db`で実行されるスクリプトです。データベースの初期化のみを行います。新しい環境でのセットアップや、データベースをリセットしたい場合に使用します。
-  - **`setup`**: `npm run setup`で実行されるスクリプトです。データベース初期化とサーバー起動を連続して行います。初回セットアップ用に使用します。
+  - **`start`**: `npm start`で実行されるスクリプトです。Webサーバーを起動します。
+  - **`dev`**: `npm run dev`で実行されるスクリプトです。開発環境での使用に適しています（startと同じ内容）。
 
 #### `dependencies`
 - **説明**: プロジェクトが依存するnpmパッケージを定義します
 - **適用タイミング**: `npm install`コマンドを実行したとき、これらのパッケージが自動的にインストールされます
 - **このプロジェクトの依存パッケージ**:
-  - **`express`** (^4.21.2): Node.js用の高速でミニマルなWebフレームワークです。HTTPサーバーの構築、ルーティング、ミドルウェアなどの機能を提供します。バージョン4.21.2以上、5.0.0未満が使用されます。
-  - **`sqlite3`** (^5.1.7): Node.jsからSQLiteデータベースにアクセスするためのライブラリです。偉人データの保存と検索に使用されます。バージョン5.1.7以上、6.0.0未満が使用されます。
-
-### バージョン表記について
-- `^` (キャレット): 指定したバージョン以上、次のメジャーバージョン未満を許容します（例: ^4.21.2 は 4.21.2以上5.0.0未満）
-- `~` (チルダ): 指定したバージョン以上、次のマイナーバージョン未満を許容します（例: ~4.21.2 は 4.21.2以上4.22.0未満）
-- 固定バージョン: バージョン番号のみを指定すると、そのバージョンのみがインストールされます（例: 4.21.2）
-
-### package.jsonの管理方法
-- 新しいパッケージをインストールする場合: `npm install パッケージ名 --save`
-- 開発用パッケージをインストールする場合: `npm install パッケージ名 --save-dev`
-- パッケージをアップデートする場合: `npm update`
-- 特定のパッケージをアップデートする場合: `npm update パッケージ名` 
+  - **`express`** (^4.21.2): Node.js用のWebフレームワークです。
+  - **`pg`** (^8.11.3): PostgreSQLデータベースに接続するためのNode.jsクライアントです。 

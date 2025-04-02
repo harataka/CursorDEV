@@ -5,11 +5,11 @@
     "main": "server.js",
     "scripts": {
         "start": "node server.js",
-        "init-db": "node src/database/init-db.js",
-        "setup": "node src/database/init-db.js && node server.js"
+        "dev": "node server.js"
     },
     "dependencies": {
         "express": "^4.21.2",
-        "sqlite3": "^5.1.7"
+        "pg": "^8.11.3",
+        "dotenv": "^16.3.1"
     }
 }
