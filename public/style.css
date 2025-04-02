@@ -132,6 +132,12 @@ button:hover {
     color: #555;
 }
 
+.age-diff {
+    font-size: 0.85rem;
+    color: #777;
+    font-style: italic;
+    margin-top: 8px;
+}
 
 /* フッター */
 footer {
