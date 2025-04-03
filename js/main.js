@@ -11,6 +11,15 @@ document.addEventListener('DOMContentLoaded', function () {
     // フォームの要素を取得
     const ageForm = document.getElementById('age-form');
 
+    // スライダーと表示値の要素を取得
+    const ageSlider = document.getElementById('age');
+    const ageValueDisplay = document.getElementById('age-display');
+
+    // スライダーの値が変更されたときのイベントリスナー
+    ageSlider.addEventListener('input', function () {
+        ageValueDisplay.textContent = this.value;
+    });
+
     // 結果エリアの要素を取得
     const resultsDiv = document.getElementById('results');
 
@@ -21,9 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
 
 
-        // 入力された年齢を取得
-        const ageInput = document.getElementById('age');
-        const age = parseInt(ageInput.value);
+        // スライダーから年齢を取得
+        const age = parseInt(ageSlider.value);
 
 
         // 入力が有効かチェック
