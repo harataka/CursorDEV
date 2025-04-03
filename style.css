@@ -80,12 +80,12 @@ header p {
 
 /* メインコンテンツ */
 main {
-    background-color: rgba(255,255,255,0.85);
+    background-color: rgba(255, 255, 255, 0.85);
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     padding: 25px;
     margin-bottom: 30px;
-    position:relative;
+    position: relative;
 
 }
 
@@ -102,7 +102,7 @@ form {
     border-radius: 5px;
     border-left: 5px solid #4a6da7;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-    background-image: 
+    background-image:
         url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><text x="10" y="40" font-family="serif" font-size="40" fill="rgba(74, 109, 167, 0.05)">歳</text></svg>');
     background-repeat: no-repeat;
     background-position: right bottom;
@@ -186,13 +186,13 @@ button:hover {
     border: 1px solid #ddd;
     border-radius: 4px;
     min-height: 150px;
-    background-color: rgba(250,246,240,0.8);
+    background-color: rgba(250, 246, 240, 0.8);
     background-image:
         linear-gradient(rgba(222, 215, 200, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(222, 215, 200, 0.1) 1px, transparent 1px);
-    background-size:20px 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    position:relative;
+    background-size: 20px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    position: relative;
 }
 
 .result-area::before {
@@ -226,6 +226,26 @@ button:hover {
     font-size: 1.2rem;
     margin-bottom: 5px;
     color: #333;
+}
+
+.wiki-link {
+    color: #4a6da7;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.wiki-link:hover {
+    color: #385888;
+    text-decoration: underline;
+}
+
+.wiki-link::after {
+    content: "📖";
+    font-size: 0.8rem;
+    margin-left: 3px;
+    vertical-align: super;
+    opacity: 0.7;
 }
 
 .result-item p {

@@ -49,7 +49,18 @@ function createResultElements(episodes, searchedAge) {
 
         // 名前と年齢を表示するヘッダーを作成
         const header = document.createElement('h3');
-        header.textContent = `${episode.name}（${episode.age}歳）`;
+
+        // Wikipediaへのリンクを作成
+        const wikiLink = document.createElement('a');
+        wikiLink.href = `https://ja.wikipedia.org/wiki/${encodeURIComponent(episode.name)}`;
+        wikiLink.textContent = episode.name;
+        wikiLink.target = '_blank';
+        wikiLink.rel = 'noopener noreferrer';
+        wikiLink.className = 'wiki-link';
+
+        // ヘッダーにリンクと年齢テキストを追加
+        header.appendChild(wikiLink);
+        header.appendChild(document.createTextNode(`（${episode.age}歳）`));
 
         // エピソード内容を表示する段落を作成
         const content = document.createElement('p');

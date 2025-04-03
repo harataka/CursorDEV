@@ -200,7 +200,10 @@ great-ages/
 ├── js/                # クライアントサイドJavaScript
 │   ├── main.js        # メインスクリプト
 │   ├── data/          # データ関連
+│   │   └── famous-people.js  # 偉人データ
 │   └── utils/         # ユーティリティ
+│       ├── search-utils.js   # 検索機能関連
+│       └── display-utils.js  # 表示機能関連
 ├── src/               # サーバーサイドソース
 │   └── database/      # データベース関連
 │       └── db.js      # DB操作
