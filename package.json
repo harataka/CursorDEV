@@ -1,7 +1,7 @@
 {
-    "name": "ijin-saijiki",
+    "name": "great-ages",
     "version": "1.0.0",
-    "description": "偉人歳時記アプリケーション",
+    "description": "その歳、偉人は。- あなたと同じ年齢で、彼らは何を成し遂げた",
     "main": "server.js",
     "scripts": {
         "start": "node server.js",
@@ -9,7 +9,6 @@
     },
     "dependencies": {
         "express": "^4.21.2",
-        "pg": "^8.11.3",
-        "dotenv": "^16.3.1"
+        "pg": "^8.11.3"
     }
 }

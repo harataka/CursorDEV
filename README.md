@@ -1,4 +1,4 @@
-# 偉人歳時記
+# その歳、偉人は。
 
 年齢を入力すると、その年齢の時に偉人が何をしていたかを教えてくれるWebアプリケーションです。
 
@@ -20,7 +20,7 @@
 ```bash
 # リポジトリをクローン
 git clone <リポジトリURL>
-cd ijin-saijiki
+cd great-ages
 
 # 依存パッケージをインストール
 npm install
@@ -74,7 +74,7 @@ npm start
 1. Renderダッシュボードから「New +」→「Web Service」を選択
 2. GitHubリポジトリに接続
 3. 以下の設定を行います：
-   - Name: 任意の名前（例: ijin-saijiki）
+   - Name: 任意の名前（例: great-ages）
    - Environment: Node
    - Build Command: `npm install`
    - Start Command: `npm start`
@@ -194,7 +194,7 @@ CORS関連の問題をデバッグする際は、以下のポイントを確認�
 ## プロジェクト構成
 
 ```
-ijin-saijiki/
+great-ages/
 ├── public/                # 静的ファイル
 │   ├── index.html         # メインHTML
 │   ├── style.css          # スタイルシート
@@ -214,7 +214,20 @@ ijin-saijiki/
 
 このアプリケーションの今後の開発予定機能リストです：
 
+### 優先度高
+- [ ] 検索履歴の保存機能
+- [ ] SNS共有ボタンの追加
+- [ ] 偉人データの充実（データ追加）
 
+### 優先度中
+- [ ] アフィリエイトリンク表示機能（関連書籍・映画などへのリンク）
+- [ ] ユーザーアカウント機能
+- [ ] お気に入りエピソード保存機能
+
+### 優先度低
+- [ ] 偉人カテゴリ（分野別）での絞り込み
+- [ ] 年代別表示機能
+- [ ] 多言語対応（英語・中国語など）
 
 ## package.jsonの詳細説明
 
@@ -222,7 +235,7 @@ ijin-saijiki/
 
 ```json
 {
-    "name": "ijin-saijiki",
+    "name": "great-ages",
     "version": "1.0.0",
     "description": "偉人歳時記アプリケーション",
     "main": "server.js",
