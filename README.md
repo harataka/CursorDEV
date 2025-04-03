@@ -195,20 +195,19 @@ CORS関連の問題をデバッグする際は、以下のポイントを確認�
 
 ```
 great-ages/
-├── public/                # 静的ファイル
-│   ├── index.html         # メインHTML
-│   ├── style.css          # スタイルシート
-│   └── js/                # クライアントサイドJavaScript
-│       ├── main.js        # メインスクリプト
-│       ├── data/          # データ関連
-│       └── utils/         # ユーティリティ
-├── src/                   # サーバーサイドソース
-│   └── database/          # データベース関連
-│       └── db.js          # DB操作
-├── server.js              # サーバーメイン
-├── package.json           # プロジェクト設定
-└── README.md              # 説明書
-``` 
+├── index.html         # メインHTML
+├── style.css          # スタイルシート
+├── js/                # クライアントサイドJavaScript
+│   ├── main.js        # メインスクリプト
+│   ├── data/          # データ関連
+│   └── utils/         # ユーティリティ
+├── src/               # サーバーサイドソース
+│   └── database/      # データベース関連
+│       └── db.js      # DB操作
+├── server.js          # サーバーメイン
+├── package.json       # プロジェクト設定
+└── README.md          # 説明書
+```
 
 ## 今後の実装予定（TODO）
 
