@@ -24,11 +24,13 @@
         <main>
             <div class="input-area">
                 <form id="age-form">
-                    <label for="age">あなたの年: <span id="age-display">30</span>歳</label>
+                    <div class="age-display-container">
+                        <span id="age-icon" class="age-icon">👤</span>
+                        <label for="age">あなたの年: <span id="age-display">30</span>歳</label>
+                    </div>
                     <input type="range" id="age" name="age" min="1" max="120" value="30" class="slider" required>
                     <button type="submit">検索</button>
                 </form>
-
             </div>
             <div id="results" class="result-area"></div>
             <!-- 結果エリア -->

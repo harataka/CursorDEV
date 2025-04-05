@@ -78,18 +78,21 @@ async function searchFamousPeopleByAge(age) {
         logDebug('完全一致検索結果数:', exactMatchResult.length);
         logDebug('完全一致検索結果:', exactMatchResult);
 
-        // 完全一致のデータがあればそれを返す
+        // 完全一致のデータがあればその中からランダムに1件を返す
         if (exactMatchResult.length > 0) {
-            return exactMatchResult;
+            // 複数件ある場合はランダムに1件選択
+            const randomIndex = Math.floor(Math.random() * exactMatchResult.length);
+            return [exactMatchResult[randomIndex]];
         }
 
-        // 完全一致のデータがない場合、近い年齢のデータを取得
-        const rangeLow = age - 5;
-        const rangeHigh = age + 5;
-        const rangeUrl = `${SUPABASE_URL}/rest/v1/famous_people?age=gte.${rangeLow}&age=lte.${rangeHigh}`;
-        logDebug('範囲検索URL:', rangeUrl);
+        // 入力された年齢に近いデータを取得するための処理
+        // 年齢の近さで検索するため、年齢の前後で検索して近いものを1件取得する
 
-        const rangeResponse = await fetch(rangeUrl, {
+        // まず年齢より大きいデータを1件取得
+        const olderUrl = `${SUPABASE_URL}/rest/v1/famous_people?age=gt.${age}&order=age.asc&limit=1`;
+        logDebug('年上検索URL:', olderUrl);
+
+        const olderResponse = await fetch(olderUrl, {
             method: 'GET',
             headers: {
                 'apikey': SUPABASE_KEY,
@@ -100,25 +103,49 @@ async function searchFamousPeopleByAge(age) {
             mode: 'cors'
         });
 
-        logDebug('範囲検索レスポンスステータス:', rangeResponse.status);
-        logDebug('範囲検索レスポンスヘッダー:', Object.fromEntries(rangeResponse.headers.entries()));
+        // 次に年齢より小さいデータを1件取得
+        const youngerUrl = `${SUPABASE_URL}/rest/v1/famous_people?age=lt.${age}&order=age.desc&limit=1`;
+        logDebug('年下検索URL:', youngerUrl);
 
-        if (!rangeResponse.ok) {
-            const errorText = await rangeResponse.text();
-            logDebug('範囲検索エラーレスポンス:', errorText);
-            throw new Error(`サーバーからのデータ取得に失敗しました: ${rangeResponse.status} - ${errorText}`);
+        const youngerResponse = await fetch(youngerUrl, {
+            method: 'GET',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                ...corsHeaders
+            },
+            mode: 'cors'
+        });
+
+        // 両方のレスポンスを処理
+        const olderResults = olderResponse.ok ? await olderResponse.json() : [];
+        const youngerResults = youngerResponse.ok ? await youngerResponse.json() : [];
+
+        logDebug('年上検索結果数:', olderResults.length);
+        logDebug('年下検索結果数:', youngerResults.length);
+
+        // より近い年齢のレコードを選択する
+        if (olderResults.length > 0 && youngerResults.length > 0) {
+            // 両方の結果がある場合は、年齢差が小さい方を選択
+            const olderDiff = olderResults[0].age - age;
+            const youngerDiff = age - youngerResults[0].age;
+
+            if (olderDiff <= youngerDiff) {
+                return [olderResults[0]];
+            } else {
+                return [youngerResults[0]];
+            }
+        } else if (olderResults.length > 0) {
+            // 年上の結果だけある場合
+            return [olderResults[0]];
+        } else if (youngerResults.length > 0) {
+            // 年下の結果だけある場合
+            return [youngerResults[0]];
         }
 
-        const rangeResults = await rangeResponse.json();
-        logDebug('範囲検索結果数:', rangeResults.length);
-        logDebug('範囲検索結果:', rangeResults);
-
-        if (rangeResults.length > 0) {
-            return rangeResults.slice(0, 3); // 最大3つまで
-        }
-
-        // どちらも見つからない場合はランダムに3つ取得
-        const randomUrl = `${SUPABASE_URL}/rest/v1/famous_people?limit=3`;
+        // どちらも見つからない場合はランダムに1つ取得
+        const randomUrl = `${SUPABASE_URL}/rest/v1/famous_people?limit=1`;
         logDebug('ランダム検索URL:', randomUrl);
 
         const randomResponse = await fetch(randomUrl, {
@@ -132,12 +159,8 @@ async function searchFamousPeopleByAge(age) {
             mode: 'cors'
         });
 
-        logDebug('ランダム検索レスポンスステータス:', randomResponse.status);
-        logDebug('ランダム検索レスポンスヘッダー:', Object.fromEntries(randomResponse.headers.entries()));
-
         if (!randomResponse.ok) {
             const errorText = await randomResponse.text();
-            logDebug('ランダム検索エラーレスポンス:', errorText);
             throw new Error(`サーバーからのデータ取得に失敗しました: ${randomResponse.status} - ${errorText}`);
         }
 

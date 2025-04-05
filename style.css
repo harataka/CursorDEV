@@ -4,6 +4,31 @@
     box-sizing: border-box;
 }
 
+/* CSS変数 */
+:root {
+    /* テーマカラー - 歴史的な重厚感のある配色 */
+    --primary-color: #2e1a17;
+    /* バーガンディに近い深みのある赤褐色 */
+    --secondary-color: #213243;
+    /* ネイビー */
+    --tertiary-color: #2a3c2d;
+    /* ダークグリーン */
+    --accent-color: #b8a170;
+    /* ゴールド */
+    --accent-color-light: #d4c08e;
+    /* ライトゴールド */
+    --text-color: #333333;
+    --text-color-light: #e8e3d7;
+    --background-color: #f5f0e8;
+    --container-bg: rgba(245, 240, 228, 0.95);
+
+    /* 背景変更用の変数 */
+    --bg-hue: 35;
+    --bg-saturation: 30%;
+    --bg-lightness: 90%;
+    --pattern-opacity: 0.2;
+    --year-text: "1900";
+}
 
 /* 背景アニメーション */
 @keyframes backgroundFlow {
@@ -18,12 +43,13 @@
 
 
 body {
-    font-family: 'Noto Sans JP', 'ヒラギノ角ゴ Pro W3', sans-serif;
+    font-family: 'Noto Serif JP', 'Times New Roman', serif;
     line-height: 1.6;
-    color: #333;
-    background-color: #f5f5f5;
+    color: var(--text-color);
+    background-color: hsl(var(--bg-hue), var(--bg-saturation), var(--bg-lightness));
     position: relative;
     overflow: hidden;
+    transition: background-color 0.5s ease;
 }
 
 body::before {
@@ -35,16 +61,29 @@ body::before {
     height: 100%;
     z-index: -1;
     background-image:
-        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><circle cx="100" cy="100" r="80" fill="none" stroke="rgba(74, 109, 167, 0.1)" stroke-width="5"/><line x1="100" y1="30" x2="100" y2="40" stroke="rgba(74, 109, 167, 0.1)" stroke-width="3"/><line x1="170" y1="100" x2="160" y2="100" stroke="rgba(74, 109, 167, 0.1)" stroke-width="3"/><line x1="100" y1="170" x2="100" y2="160" stroke="rgba(74, 109, 167, 0.1)" stroke-width="3"/><line x1="30" y1="100" x2="40" y2="100" stroke="rgba(74, 109, 167, 0.1)" stroke-width="3"/><line x1="100" y1="100" x2="100" y2="70" stroke="rgba(74, 109, 167, 0.15)" stroke-width="2"/><line x1="100" y1="100" x2="120" y2="100" stroke="rgba(74, 109, 167, 0.2)" stroke-width="2"/></svg>'),
-        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><text x="10" y="55" font-family="serif" font-size="50" fill="rgba(74, 109, 167, 0.05)">1900</text></svg>'),
-        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"><text x="10" y="80" font-family="serif" font-size="60" fill="rgba(74, 109, 167, 0.05)">1800</text></svg>'),
-        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><line x1="0" y1="50" x2="100" y2="50" stroke="rgba(74, 109, 167, 0.05)" stroke-width="1" stroke-dasharray="5,5"/></svg>');
-    background-size: 200px, 120px, 150px, 100px;
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><circle cx="100" cy="100" r="80" fill="none" stroke="rgba(184, 161, 112, 0.15)" stroke-width="5"/><line x1="100" y1="30" x2="100" y2="40" stroke="rgba(184, 161, 112, 0.15)" stroke-width="3"/><line x1="170" y1="100" x2="160" y2="100" stroke="rgba(184, 161, 112, 0.15)" stroke-width="3"/><line x1="100" y1="170" x2="100" y2="160" stroke="rgba(184, 161, 112, 0.15)" stroke-width="3"/><line x1="30" y1="100" x2="40" y2="100" stroke="rgba(184, 161, 112, 0.15)" stroke-width="3"/><line x1="100" y1="100" x2="100" y2="70" stroke="rgba(184, 161, 112, 0.2)" stroke-width="2"/><line x1="100" y1="100" x2="120" y2="100" stroke="rgba(184, 161, 112, 0.25)" stroke-width="2"/></svg>'),
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><text x="10" y="55" font-family="serif" font-size="50" fill="rgba(184, 161, 112, 0.08)">1900</text></svg>');
+    background-size: 200px, 120px;
     background-repeat: repeat;
-    opacity: 0.5;
+    opacity: var(--pattern-opacity);
     animation: backgroundFlow 60s linear infinite;
+    transition: opacity 0.5s ease;
 }
 
+/* 年代表示の追加 */
+body::after {
+    content: var(--year-text);
+    position: fixed;
+    bottom: 5%;
+    right: 5%;
+    font-size: 10vw;
+    font-family: 'Times New Roman', serif;
+    color: rgba(184, 161, 112, 0.15);
+    z-index: -1;
+    opacity: 0.3;
+    transition: all 0.5s ease;
+    transform: rotate(-5deg);
+}
 
 .container {
     max-width: 800px;
@@ -52,9 +91,10 @@ body::before {
     padding: 20px;
     position: relative;
     z-index: 1;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: var(--container-bg);
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(184, 161, 112, 0.2);
 }
 
 /* ヘッダ */
@@ -62,31 +102,43 @@ header {
     text-align: center;
     margin-bottom: 30px;
     padding-bottom: 20px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--accent-color);
+    position: relative;
+}
+
+header::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 25%;
+    right: 25%;
+    height: 3px;
+    background: linear-gradient(to right, transparent, var(--accent-color), transparent);
 }
 
 header h1 {
     font-size: 2.5rem;
-    color: #333;
+    color: var(--primary-color);
     margin-bottom: 10px;
     font-weight: normal;
     letter-spacing: 0.1em;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 header p {
     font-size: 1rem;
-    color: #666;
+    color: var(--tertiary-color);
 }
 
 /* メインコンテンツ */
 main {
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: rgba(255, 255, 255, 0.7);
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 25px;
     margin-bottom: 30px;
     position: relative;
-
+    border: 1px solid rgba(184, 161, 112, 0.3);
 }
 
 .input-area {
@@ -94,102 +146,238 @@ main {
     text-align: center;
 }
 
+/* フォーム要素 */
 form {
     display: inline-block;
     text-align: left;
-    padding: 20px;
-    background-color: rgba(249, 246, 240, 0.9);
-    border-radius: 5px;
-    border-left: 5px solid #4a6da7;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    background-color: rgba(245, 240, 228, 0.9);
+    border-radius: 8px;
+    border-left: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
     background-image:
-        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><text x="10" y="40" font-family="serif" font-size="40" fill="rgba(74, 109, 167, 0.05)">歳</text></svg>');
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><text x="10" y="40" font-family="serif" font-size="40" fill="rgba(184, 161, 112, 0.1)">歳</text></svg>');
     background-repeat: no-repeat;
     background-position: right bottom;
     background-size: 60px;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 450px;
+    transition: all 0.3s ease;
+}
+
+form::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--accent-color) 0%, var(--primary-color) 100%);
+}
+
+form::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30%;
+    height: 3px;
+    background: linear-gradient(to right, transparent, var(--accent-color-light));
+}
+
+/* 年齢アイコン */
+.age-display-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.age-icon {
+    font-size: 2.5rem;
+    margin-right: 15px;
+    display: inline-block;
+    transition: transform 0.3s ease;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.age-icon::after {
+    content: "";
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    bottom: -5px;
+    right: -5px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+    z-index: -1;
+    opacity: 0.7;
 }
 
 label {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 0;
     font-weight: bold;
-    color: #555;
+    color: var(--secondary-color);
+    position: relative;
+    letter-spacing: 0.05em;
+    font-size: 1.1rem;
 }
 
 input[type="number"] {
     width: 100px;
     padding: 8px 12px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--accent-color-light);
     border-radius: 4px;
     font-size: 1rem;
     margin-right: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
 /* スライダー用スタイル */
 .slider {
     width: 100%;
-    height: 8px;
-    margin: 15px 0;
-    background: #d3d3d3;
-    border-radius: 5px;
+    height: 6px;
+    margin: 30px 0;
+    background: linear-gradient(to right, #e0d8c5 0%, #e0d8c5 100%);
+    border-radius: 10px;
     outline: none;
     -webkit-appearance: none;
     appearance: none;
+    position: relative;
+    cursor: pointer;
+}
+
+.slider:focus {
+    box-shadow: 0 0 0 3px rgba(184, 161, 112, 0.2);
+}
+
+.slider::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 6px;
+    cursor: pointer;
+    background: linear-gradient(to right, var(--accent-color-light) 0%, var(--accent-color) 100%);
+    border-radius: 10px;
 }
 
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    background: #4a6da7;
+    background: var(--accent-color);
     cursor: pointer;
-    border: none;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    border: 2px solid #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin-top: -9px;
+    position: relative;
+    z-index: 2;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.slider::-moz-range-track {
+    width: 100%;
+    height: 6px;
+    cursor: pointer;
+    background: linear-gradient(to right, var(--accent-color-light) 0%, var(--accent-color) 100%);
+    border-radius: 10px;
 }
 
 .slider::-moz-range-thumb {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    background: #4a6da7;
+    background: var(--accent-color);
     cursor: pointer;
-    border: none;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    border: 2px solid #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.slider::-moz-range-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
 }
 
 #age-display {
     font-weight: bold;
-    color: #4a6da7;
-    font-size: 1.2em;
+    color: var(--primary-color);
+    font-size: 1.3em;
+    position: relative;
+    display: inline-block;
+    transition: all 0.3s ease;
+    padding: 0 5px;
+    border-bottom: 2px solid var(--accent-color);
 }
 
+/* 検索ボタンのスタイル */
 button {
-    padding: 8px 20px;
-    background-color: #4a6da7;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-color-light) 100%);
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 50px;
     cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s;
+    font-size: 1.05rem;
+    transition: all 0.3s ease;
+    font-family: 'Noto Serif JP', serif;
+    box-shadow: 0 4px 10px rgba(184, 161, 112, 0.3);
+    position: relative;
+    overflow: hidden;
+    display: block;
+    margin: 15px auto 0;
+    width: auto;
+    min-width: 180px;
+    text-align: center;
+    letter-spacing: 0.1em;
+    font-weight: 500;
 }
 
 button:hover {
-    background-color: #385888;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    box-shadow: 0 6px 15px rgba(46, 26, 23, 0.4);
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(46, 26, 23, 0.4);
+}
+
+button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.5s ease;
+}
+
+button:hover::before {
+    left: 100%;
 }
 
 /* 結果エリア */
 .result-area {
     padding: 20px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--accent-color-light);
     border-radius: 4px;
     min-height: 150px;
-    background-color: rgba(250, 246, 240, 0.8);
+    background-color: rgba(245, 240, 228, 0.8);
     background-image:
-        linear-gradient(rgba(222, 215, 200, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(222, 215, 200, 0.1) 1px, transparent 1px);
+        linear-gradient(rgba(184, 161, 112, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(184, 161, 112, 0.05) 1px, transparent 1px);
     background-size: 20px 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     position: relative;
@@ -202,7 +390,7 @@ button:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"><text x="40" y="100" font-family="serif" font-size="120" fill="rgba(74, 109, 167, 0.03)" transform="rotate(-15, 75, 75)">史</text></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"><text x="40" y="100" font-family="serif" font-size="120" fill="rgba(184, 161, 112, 0.05)" transform="rotate(-15, 75, 75)">史</text></svg>');
     background-repeat: no-repeat;
     background-position: center;
     background-size: 150px;
@@ -213,7 +401,7 @@ button:hover {
 .result-item {
     margin-bottom: 15px;
     padding-bottom: 15px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid rgba(184, 161, 112, 0.2);
 }
 
 .result-item:last-child {
@@ -225,19 +413,21 @@ button:hover {
 .result-item h3 {
     font-size: 1.2rem;
     margin-bottom: 5px;
-    color: #333;
+    color: var(--primary-color);
 }
 
 .wiki-link {
-    color: #4a6da7;
+    color: var(--secondary-color);
     text-decoration: none;
     transition: all 0.2s ease;
     position: relative;
+    border-bottom: 1px dotted var(--accent-color-light);
 }
 
 .wiki-link:hover {
-    color: #385888;
-    text-decoration: underline;
+    color: var(--accent-color);
+    border-bottom: 1px solid var(--accent-color);
+    text-decoration: none;
 }
 
 .wiki-link::after {
@@ -249,12 +439,12 @@ button:hover {
 }
 
 .result-item p {
-    color: #555;
+    color: var(--text-color);
 }
 
 .age-diff {
     font-size: 0.85rem;
-    color: #777;
+    color: var(--tertiary-color);
     font-style: italic;
     margin-top: 8px;
 }
@@ -263,8 +453,9 @@ button:hover {
 footer {
     text-align: center;
     padding: 20px 0;
-    color: #777;
+    color: var(--secondary-color);
     font-size: 0.9em;
+    border-top: 1px solid rgba(184, 161, 112, 0.2);
 }
 
 /* レスポンシブデザイン */
@@ -282,8 +473,8 @@ footer {
     }
 
     form {
-        padding: 15px;
-        width: 100%;
+        padding: 20px;
+        max-width: 100%;
     }
 
     input[type="number"] {
@@ -293,5 +484,17 @@ footer {
 
     button {
         width: 100%;
+        padding: 10px 20px;
+    }
+
+    .age-display-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .age-icon {
+        margin-right: 0;
+        margin-bottom: 10px;
+        font-size: 2.2rem;
     }
 }
